@@ -1,0 +1,34 @@
+-- Create a table to store text data
+CREATE TABLE TextData (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    text_content TEXT,
+    sentiment_category VARCHAR(20)
+);
+
+-- Insert sample text data
+INSERT INTO TextData (text_content) VALUES 
+    ('This is a great product!'),
+    ('I feel happy today.'),
+    ('The service was terrible.'),
+    ('I am not sure about this.');
+
+-- Create a procedure to perform sentiment analysis and update the sentiment category
+DELIMITER $$
+CREATE PROCEDURE PerformSentimentAnalysis()
+BEGIN
+    UPDATE TextData
+    SET sentiment_category =
+        CASE
+            WHEN text_content LIKE '%great%' OR text_content LIKE '%happy%' THEN 'Positive'
+            WHEN text_content LIKE '%terrible%' OR text_content LIKE '%not sure%' THEN 'Negative'
+            ELSE 'Neutral'
+        END;
+END;
+$$
+DELIMITER ;
+
+-- Execute the sentiment analysis procedure
+CALL PerformSentimentAnalysis();
+
+-- Query to retrieve text data with sentiment categories
+SELECT * FROM TextData;
